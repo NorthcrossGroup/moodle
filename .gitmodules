@@ -1,0 +1,4 @@
+[submodule "auth/drupalservices"]
+	path = auth/drupalservices
+	url = git@github.com:cannod/moodle-drupalservices.git
+	branch = 2.7.x-1.x-dev

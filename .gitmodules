@@ -2,3 +2,6 @@
 	path = auth/drupalservices
 	url = git@github.com:cannod/moodle-drupalservices.git
 	branch = 2.7.x-1.x-dev
+[submodule "theme/bootstrap"]
+	path = theme/bootstrap
+	url = git@github.com:bmbrands/theme_bootstrap.git

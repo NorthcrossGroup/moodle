@@ -568,6 +568,10 @@ class completion_info {
             ($possibleresult == COMPLETION_COMPLETE &&
                 ($current->completionstate == COMPLETION_COMPLETE_PASS ||
                 $current->completionstate == COMPLETION_COMPLETE_FAIL))) {
+            // the state didn't change, but the timestamp needs to be updated with the new completion time
+            $current->timemodified    = time();
+            $this->internal_set_data($cm, $current);
+
             return;
         }
 
@@ -707,9 +711,27 @@ class completion_info {
 
         // OK, change state, save it, and update completion
         $data->viewed = COMPLETION_VIEWED;
+        $data->timemodified    = time();
         $this->internal_set_data($cm, $data);
-        $this->update_state($cm, COMPLETION_COMPLETE, $userid);
     }
+
+  public function set_module_completion($cm, $userid=0,$completion=COMPLETION_COMPLETE) {
+    global $PAGE;
+    if ($PAGE->headerprinted) {
+      debugging('set_module_viewed must be called before header is printed',
+        DEBUG_DEVELOPER);
+    }
+
+    // Get current completion state
+    $data = $this->get_data($cm, false, $userid);
+    // OK, change state, save it, and update completion
+    // set the completion state. If already completed, just update the timestamp
+    $data->completionstate=$completion;
+
+    $this->internal_set_data($cm, $data);
+
+    $this->update_state($cm, $completion, $userid);
+  }
 
     /**
      * Determines how much completion data exists for an activity. This is used when

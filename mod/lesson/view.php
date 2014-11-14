@@ -43,10 +43,15 @@ require_login($course, false, $cm);
 if ($backtocourse) {
     redirect(new moodle_url('/course/view.php', array('id'=>$course->id)));
 }
-
 // Mark as viewed
 $completion = new completion_info($course);
-$completion->set_module_viewed($cm);
+$completion->set_module_viewed($cm, 0);
+
+if($pageid==LESSON_EOL){
+  // Mark as potentially completed
+  $completion->set_module_completion($cm, 0);
+
+}
 
 $url = new moodle_url('/mod/lesson/view.php', array('id'=>$id));
 if ($pageid !== null) {
@@ -495,7 +500,6 @@ if ($pageid != LESSON_EOL) {
                 $lessoncontent .= get_string("welldone", "lesson");
             }
         }
-
         // update central gradebook
         lesson_update_grades($lesson, $USER->id);
 

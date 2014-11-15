@@ -76,7 +76,8 @@ class course_completion_form extends moodleform {
         $mform->addElement('select', 'overall_aggregation', get_string('overallaggregation', 'core_completion'), $overallaggregationmenu);
         $mform->setDefault('overall_aggregation', $completion->get_aggregation_method());
 // add a setting to keep reset completion requirement after x time since the last attempt
-        $mform->addElement('text', 'reset_completion_after_time', get_string('resetcompletionafter', 'core_completion'));
+        $mform->addElement('text', 'reset_completion_after', get_string('resetcompletionafter', 'core_completion'));
+        $mform->setDefault('reset_completion_after', $completion->get_completion_reset_time());
 
         // Activity completion criteria
         $label = get_string('coursecompletioncondition', 'core_completion', get_string('activitiescompleted', 'core_completion'));

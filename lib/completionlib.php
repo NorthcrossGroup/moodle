@@ -145,6 +145,10 @@ define('COMPLETION_AGGREGATION_ALL', 1);
  */
 define('COMPLETION_AGGREGATION_ANY', 2);
 
+/**
+ * Course completion reset time limit. This value indicates resetting after x amount of time is disabled
+ */
+define('COMPLETION_RESET_AFTER_DISABLED',0);
 
 /**
  * Utility function for checking if the logged in user can view
@@ -472,6 +476,21 @@ class completion_info {
         }
 
         return $aggregation->method;
+    }
+
+    public function get_completion_reset_time($criteriatype=null) {
+      $params = array(
+        'course'        => $this->course_id,
+        'criteriatype'  => $criteriatype
+      );
+
+      $aggregation = new completion_aggregation($params);
+
+      if (!$aggregation->id) {
+        $aggregation->reset_completion_after = COMPLETION_RESET_AFTER_DISABLED;
+      }
+
+      return $aggregation->reset_completion_after;
     }
 
     /**

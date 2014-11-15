@@ -196,6 +196,8 @@ class completion_criteria_activity extends completion_criteria {
         global $DB;
 
         // Get all users who meet this criteria
+        // this will update any completion records if the lesson has been retaken and completed
+        //   this helps with the reprocessing of courses that must be retaken after x amount of time
         $sql = '
             SELECT DISTINCT
                 c.id AS course,
@@ -221,6 +223,7 @@ class completion_criteria_activity extends completion_criteria {
                 {course_completion_crit_compl} cc
              ON cc.criteriaid = cr.id
             AND cc.userid = ra.userid
+            AND cc.timecompleted = mc.timemodified
             WHERE
                 cr.criteriatype = '.COMPLETION_CRITERIA_TYPE_ACTIVITY.'
             AND con.contextlevel = '.CONTEXT_COURSE.'

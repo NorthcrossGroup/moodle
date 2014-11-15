@@ -182,6 +182,7 @@ class completion_criteria_course extends completion_criteria {
                 {course_completion_crit_compl} ccc
              ON ccc.criteriaid = cr.id
             AND ccc.userid = ra.userid
+            AND ccc.timecompleted=cc.timecompleted
             WHERE
                 cr.criteriatype = ".COMPLETION_CRITERIA_TYPE_COURSE."
             AND con.contextlevel = ".CONTEXT_COURSE."

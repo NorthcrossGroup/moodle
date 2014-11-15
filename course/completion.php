@@ -102,6 +102,7 @@ if ($form->is_cancelled()){
     );
     $aggregation = new completion_aggregation($aggdata);
     $aggregation->setMethod($data->overall_aggregation);
+    $aggregation->setResetCompletionTime((int)$data->reset_completion_after);
     $aggregation->save();
 
     // Handle activity aggregation.

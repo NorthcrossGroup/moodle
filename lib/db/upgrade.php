@@ -4054,6 +4054,19 @@ function xmldb_main_upgrade($oldversion) {
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2014110300.00);
     }
+    if ($oldversion < 2014111000.04) {
+      // Add the reset_completion_after field to store the time value to rest completions after.
+      $table = new xmldb_table('course_completion_aggr_methd');
+      $field = new xmldb_field('reset_completion_after', XMLDB_TYPE_INTEGER, 10,XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0);
+
+      // Conditionally launch add index coursecriteratype
+      if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+      }
+
+      // Main savepoint reached
+      upgrade_main_savepoint(true, 2014111000.04);
+    }
 
     return true;
 }

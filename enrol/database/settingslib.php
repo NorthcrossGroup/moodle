@@ -15,36 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Upgrade code for install
+ * Database enrolment plugin custom settings.
  *
- * @package   assignsubmission_file
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @package    enrol_database
+ * @copyright  2013 Darko Miletic
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
- * Stub for upgrade code
- * @param int $oldversion
- * @return bool
+ * Class implements new specialized setting for course categories that are loaded
+ * only when required
+ * @author Darko Miletic
+ *
  */
-function xmldb_assignsubmission_file_upgrade($oldversion) {
+class enrol_database_admin_setting_category extends admin_setting_configselect {
+    public function __construct($name, $visiblename, $description) {
+        parent::__construct($name, $visiblename, $description, 1, null);
+    }
 
-    // Moodle v2.4.0 release upgrade line.
-    // Put any upgrade step following this.
+    public function load_choices() {
+        if (is_array($this->choices)) {
+            return true;
+        }
 
-    // Moodle v2.5.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Moodle v2.6.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Moodle v2.7.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Moodle v2.8.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    return true;
+        $this->choices = make_categories_options();
+        return true;
+    }
 }
-
-

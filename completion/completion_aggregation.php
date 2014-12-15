@@ -47,7 +47,7 @@ class completion_aggregation extends data_object {
      * Defaults to id, course, criteriatype, method, value
      * @var array
      */
-    public $required_fields = array('id', 'course', 'criteriatype', 'method', 'value');
+    public $required_fields = array('id', 'course', 'criteriatype', 'method', 'value', 'reset_completion_after');
 
     /* @var array Array of unique fields, used in where clauses */
     public $unique_fields = array('course', 'criteriatype');
@@ -100,6 +100,17 @@ class completion_aggregation extends data_object {
         } else {
             $this->method = COMPLETION_AGGREGATION_ALL;
         }
+    }
+
+    /**
+     * Set the completion timeframe in number of seconds since previously completed
+     * 0 effectively means it will never expire
+     *
+     * @param int $seconds the number of seconds since last completion was acheived
+     */
+    public function setResetCompletionTime($seconds) {
+
+        $this->reset_completion_after = $seconds;
     }
 
 

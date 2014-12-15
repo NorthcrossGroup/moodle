@@ -105,10 +105,11 @@ class completion_criteria_completion extends data_object {
      */
     public function mark_complete($timestamp=null) {
         // Create record
-        if (is_null($timestamp)) {
-            $this->timecompleted = time();
-        } else {
-            $this->timecompleted = $timestamp;
+        if(is_null($timestamp)) {
+          $this->timecompleted = time();
+        }
+        else{
+          $this->timecompleted = $timestamp;
         }
 
         // Save record

@@ -182,3 +182,9 @@ $string['viewingactivity'] = 'Viewing the {$a}';
 $string['writingcompletiondata'] = 'Writing completion data';
 $string['xdays'] = '{$a} days';
 $string['yourprogress'] = 'Your progress';
+
+
+$string['untildate'] = 'Completed within';
+$string['untildate_validity'] = '{$a->time} {$a->unit} ago';
+$string['completiononuntildate'] = 'Until Date';
+$string['completiononuntildatevalue'] = 'This training is complete until this Date or time has elapsed';

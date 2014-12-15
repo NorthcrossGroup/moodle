@@ -210,6 +210,7 @@ class completion_criteria_grade extends completion_criteria {
                 {course_completion_crit_compl} cc
              ON cc.criteriaid = cr.id
             AND cc.userid = ra.userid
+            AND gg.timemodified=cc.timecompleted
             WHERE
                 cr.criteriatype = '.COMPLETION_CRITERIA_TYPE_GRADE.'
             AND con.contextlevel = '.CONTEXT_COURSE.'

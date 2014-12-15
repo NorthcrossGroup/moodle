@@ -145,6 +145,10 @@ define('COMPLETION_AGGREGATION_ALL', 1);
  */
 define('COMPLETION_AGGREGATION_ANY', 2);
 
+/**
+ * Course completion reset time limit. This value indicates resetting after x amount of time is disabled
+ */
+define('COMPLETION_RESET_AFTER_DISABLED',0);
 
 /**
  * Utility function for checking if the logged in user can view
@@ -474,6 +478,21 @@ class completion_info {
         return $aggregation->method;
     }
 
+    public function get_completion_reset_time($criteriatype=null) {
+      $params = array(
+        'course'        => $this->course_id,
+        'criteriatype'  => $criteriatype
+      );
+
+      $aggregation = new completion_aggregation($params);
+
+      if (!$aggregation->id) {
+        $aggregation->reset_completion_after = COMPLETION_RESET_AFTER_DISABLED;
+      }
+
+      return $aggregation->reset_completion_after;
+    }
+
     /**
      * Get incomplete course completion criteria
      *
@@ -568,6 +587,10 @@ class completion_info {
             ($possibleresult == COMPLETION_COMPLETE &&
                 ($current->completionstate == COMPLETION_COMPLETE_PASS ||
                 $current->completionstate == COMPLETION_COMPLETE_FAIL))) {
+            // the state didn't change, but the timestamp needs to be updated with the new completion time
+            $current->timemodified    = time();
+            $this->internal_set_data($cm, $current);
+
             return;
         }
 
@@ -707,9 +730,27 @@ class completion_info {
 
         // OK, change state, save it, and update completion
         $data->viewed = COMPLETION_VIEWED;
+        $data->timemodified    = time();
         $this->internal_set_data($cm, $data);
-        $this->update_state($cm, COMPLETION_COMPLETE, $userid);
     }
+
+  public function set_module_completion($cm, $userid=0,$completion=COMPLETION_COMPLETE) {
+    global $PAGE;
+    if ($PAGE->headerprinted) {
+      debugging('set_module_viewed must be called before header is printed',
+        DEBUG_DEVELOPER);
+    }
+
+    // Get current completion state
+    $data = $this->get_data($cm, false, $userid);
+    // OK, change state, save it, and update completion
+    // set the completion state. If already completed, just update the timestamp
+    $data->completionstate=$completion;
+
+    $this->internal_set_data($cm, $data);
+
+    $this->update_state($cm, $completion, $userid);
+  }
 
     /**
      * Determines how much completion data exists for an activity. This is used when

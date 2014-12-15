@@ -137,6 +137,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="criteriatype" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The criteria type we are aggregating, or NULL if complete course aggregation"/>
+        <FIELD NAME="reset_completion_after" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="the expiration time of a completion record"/>
         <FIELD NAME="method" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 = all, 2 = any, 3 = fraction, 4 = unit"/>
         <FIELD NAME="value" TYPE="number" LENGTH="10" NOTNULL="false" SEQUENCE="false" DECIMALS="5" COMMENT="NULL = all/any, 0..1 for method 'fraction', &gt; 0 for method 'unit'"/>
       </FIELDS>

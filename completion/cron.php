@@ -202,8 +202,52 @@ function completion_cron_mark_started() {
 function completion_cron_criteria() {
 
     // Process each criteria type
-    global $CFG, $COMPLETION_CRITERIA_TYPES;
+    global $DB, $CFG, $COMPLETION_CRITERIA_TYPES;
 
+    if (debugging()) {
+      mtrace('Resetting completion status on course modules (lessons) that need it');
+    }
+
+    $DB->execute("
+      update {course_completion_criteria} cr
+            INNER JOIN
+                {course} c
+             ON cr.course = c.id
+            INNER JOIN {course_completion_aggr_methd} ccam
+             ON ccam.course=c.id and ccam.criteriatype is null
+            INNER JOIN
+                {course_modules_completion} mc
+             ON mc.coursemoduleid = cr.moduleinstance
+
+      set mc.completionstate=0
+      where ccam.reset_completion_after > 0 and (mc.timemodified < (unix_timestamp() - ccam.reset_completion_after))
+
+    ");
+
+
+    if (debugging()) {
+      mtrace('deleting completion status on completion criteria that have expired');
+    }
+
+    $DB->execute("
+      delete cc
+      from {course_completion_crit_compl} cc
+        inner join {course_completion_aggr_methd} ccam ON ccam.course=cc.course and ccam.criteriatype is null
+      where ccam.reset_completion_after > 0 and (cc.timecompleted < (unix_timestamp() - ccam.reset_completion_after))
+    ");
+
+  if (debugging()) {
+    mtrace('deleting completion status on courses that have expired');
+  }
+  // these rebuild to a 'reaggregate' status a couple of lines down after being deleted. this just
+  // forces the system to restart & measure completion. If everything is complete again, these records
+  // will rebuild as completed automagically after a cron run or two.
+  $DB->execute("
+      delete cc
+      from {course_completions} cc
+        inner join {course_completion_aggr_methd} ccam ON ccam.course=cc.course and ccam.criteriatype is null
+      where ccam.reset_completion_after > 0 and (cc.timecompleted < (unix_timestamp() - ccam.reset_completion_after))
+    ");
     foreach ($COMPLETION_CRITERIA_TYPES as $type) {
 
         $object = 'completion_criteria_'.$type;
